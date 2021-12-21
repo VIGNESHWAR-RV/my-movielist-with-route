@@ -25,20 +25,20 @@
 // export default App;
 import Button from '@mui/material/Button';
 import "./App.css";
-import FavoriteIcon from '@mui/icons-material/Favorite';
+//import FavoriteIcon from '@mui/icons-material/Favorite';
 //import Fab from '@mui/material/Fab';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {useState} from 'react';
-
-
+import MenuTwoToneIcon from '@mui/icons-material/MenuTwoTone';
+import InfoIcon from '@mui/icons-material/Info';
 import { styled } from '@mui/material/styles';
 //import Box from '@mui/material/Box';
-import Rating from '@mui/material/Rating';
+//import Rating from '@mui/material/Rating';
 //import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import Typography from '@mui/material/Typography';
-import {Switch,Route,Link} from "react-router-dom";
+// import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+// import Typography from '@mui/material/Typography';
+import {Switch,Route,Redirect,useHistory,useParams,Link} from "react-router-dom";
 
 
 
@@ -50,17 +50,6 @@ import Box from '@mui/material/Box';
 //import InputLabel from '@mui/material/InputLabel';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
-
-
-
-const StyledRating = styled(Rating)({
-  '& .MuiRating-iconFilled': {
-    color: '#ff6d75',
-  },
-  '& .MuiRating-iconHover': {
-    color: '#ff3d47',
-  },
-});
 
 
 
@@ -95,23 +84,23 @@ const ValidationTextField = styled(TextField)({
   );
 }
 const movies =
- [{name:"RRR",
+ [{name:"RRR",trailer:"https://www.youtube.com/embed/NgBoMJy386M",
  image:"https://www.filmibeat.com/ph-big/2021/12/rrr_163903031450.jpg",
  rating:9,
  summary:"A fictitious story about two legendary revolutionaries and their journey away from home before they started fighting for their country in 1920's."},
- {name:"Bahubhali-2",
+ {name:"Bahubhali-2",trailer:"https://www.youtube.com/embed/G62HrubdD6o",
  image:"https://wallpapercave.com/dwp2x/wp4027395.jpg",
  rating:8.5,
  summary:"When Shiva, the son of Bahubali, learns about his heritage, he begins to look for answers. His story is juxtaposed with past events that unfolded in the Mahishmati Kingdom."},
- {name:"Bahubhali-1",
+ {name:"Bahubhali-1",trailer:"https://www.youtube.com/embed/sOEg_YZQsTI",
  image:"https://wallpapercave.com/dwp2x/wp1851939.jpg",
  rating:8,
  summary:"In ancient India, an adventurous and daring man becomes involved in a decades-old feud between two warring peoples."},
- {name:"Naan-E",
+ {name:"Naan-E",trailer:"https://www.youtube.com/embed/q4h_e3RO_Ck",
  image:"https://wallpapercave.com/wp/wp7489196.jpg",
  rating:7,
  summary:"Since the head of a housefly is made up almost entirely of eye and very little muscle, conveying emotion as the fly was extremely difficult."},
- {name:"Maveeran",
+ {name:"Maveeran",trailer:"https://www.youtube.com/embed/f6g2TLmiG8Q",
  image:"http://i.indiglamour.com/photogallery/tamil/movies/2011/may10/Maaveeran/wide/Maaveeran_5715.jpg",
  rating:4,
  summary:"A warrior gets reincarnated 400 years later, after trying to save the princess and the kingdom, who also dies along with him. He then sets back again to fight against all odds and win back his love."},
@@ -122,21 +111,31 @@ const movies =
 
 export default function App() {
 
-  
+const [showHide,showHiding] = useState(false); 
+const styles = {display:(showHide)?"block":"none"};
 
  return(
-   <div>
-     <nav>
      <div>
-       <Link to="/">Welcome</Link>
+       <IconButton aria-label="menuBar" size="larger" color="success"
+        onClick={()=>{showHiding(!showHide);}}>
+       <MenuTwoToneIcon/>
+       </IconButton>
+       
+    <nav style={styles}>
+     <div>
+       <Link className="links" to="/">Welcome</Link>
        </div>
        <div>
-       <Link to="/movieList">MovieList</Link>
+       <Link className="links" to="/movieList">MovieList</Link>
        </div>
        <div>
-       <Link to="/addMovie">AddMovie</Link>
+       <Link className="links" to="/addMovie">AddMovie</Link>
+       </div>
+       <div>
+         <Link className="links" to="/films">Films</Link>
        </div>
      </nav>
+   
      <Switch>
        <Route exact path="/">
          <h1 className="welcome">Welcome to your Movie List Collection</h1>
@@ -144,9 +143,20 @@ export default function App() {
        <Route exact path="/movieList">
           <MovieList/>
        </Route>
+       <Route exact path="/movieList/:id">
+           <Details/>
+       </Route>
        <Route exact path="/addMovie">
           <AddMovie/>
+        </Route>
+       <Route exact path="/films">
+          <Redirect to="/movieList"/>
        </Route>
+       <Route path="**">
+            <h1>404</h1> 
+       </Route>
+   
+      
      </Switch>
    </div>
  );
@@ -154,11 +164,23 @@ export default function App() {
 
 let updatedMovies=[...movies];
 
+function Details(){
+  let {id} = useParams();
+  const movieViewed = updatedMovies[id];
+  return (<div>
+        <iframe width="811" height="456" src={movieViewed.trailer} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <h1 style={{color:white}}>{movieViewed.name}</h1>
+        <p style={{color:white}}>IMDB-{movieViewed.rating}</p>
+        <p style={{color:white}}>Summary-{movieViewed.summary}</p>
+  </div>)
+}
 
 function AddMovie(){
 
 const [added,adding] = useState(movies);
 updatedMovies = [...added];
+
+let history = useHistory();
 
 const [name,naming] = useState("");
 const [image,imaging]=useState("");
@@ -188,7 +210,7 @@ const newMovie = {name,image,rating,summary};
          <CustomizedInputs value={"Summary"} onChange={(event)=>{story(event.target.value);}}/>
 
       
-        <Button variant="contained" color="success" onClick={()=> {(newMovie.name!=="" && newMovie.image!=="" &&newMovie.rating!=="" &&newMovie.summary!=="") ? adding([...added,newMovie]): alert("Give Details To add Movie or cancel");}}>Add Movie</Button>
+        <Button onClick={()=> {adding([...added,newMovie]); history.push("/movieList");}} variant="contained" color="success" >Add Movie</Button>
         <Button variant="contained" color="error" onClick={()=>{adding([...added])}}>Cancel</Button>
         
       </Box>
@@ -209,7 +231,7 @@ function MovieList(){
       
    </div>
    <Box sx={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(15rem,1fr))",gap:"2rem;",border:"2px solid red",padding:"1rem",borderRadius:"15px",background:"#bea3a3"}}>
-      {added.map(({name,image,rating,summary},index)=><First key={index} name={name} image={image} rating={rating} summary={summary}/>)}
+      {added.map(({name,image,rating,summary},index)=><First key={index} id={index} name={name} image={image} rating={rating} summary={summary}/>)}
    </Box>
       
    </div>
@@ -217,9 +239,10 @@ function MovieList(){
   )
 }
 
-function First({name,image,rating,summary}){
-   
-
+function First({id,name,image,rating,summary}){
+  
+  const history = useHistory();
+  
   const [remove,setRemove] = useState(false);
   const styles = {display: remove ? "none" : "block"};
 
@@ -242,25 +265,16 @@ function First({name,image,rating,summary}){
      <p className="rating">{check1}<span style={style}>{rating}</span></p>
      </div>
      <IconButton aria-label="delete" size="large" color="error" onClick={()=>setRemove(!remove)}>
-  <DeleteIcon />
+     <DeleteIcon />
 </IconButton>
     </div>
 
 
-    <Typography component="legend" color="error">Your Rating?</Typography>
-<StyledRating
-  name="customized-color"
-  color="error"
-  defaultValue={Math.random().toFixed(1)*5}
-  getLabelText={(value:number) => `${value} Heart${value !== 1 ? 's' : ''}`}
-  precision={0.5}
-  icon={<FavoriteIcon fontSize="inherit" />}
-  emptyIcon={<FavoriteBorderIcon fontSize="inherit" />}
-/>
+  
 
     <div className="buttons">
-    <Button color="error" onClick={()=>showing(!show)} variant="contained">Spoiler?👀</Button>
- 
+    <Button color="error" onClick={()=>{showing(!show);}} variant="contained">Spoiler?👀</Button>
+    <IconButton onClick={()=>{history.push(`/movieList/${id}`)}}><InfoIcon/></IconButton>
     </div>
       {show ?<p className="summary"><b>Summary - </b>{summary}</p>: ""}
     
