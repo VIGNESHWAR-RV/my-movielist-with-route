@@ -169,9 +169,9 @@ function Details(){
   const movieViewed = updatedMovies[id];
   return (<div>
         <iframe width="811" height="456" src={movieViewed.trailer} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        <h1 style={{color:white}}>{movieViewed.name}</h1>
-        <p style={{color:white}}>IMDB-{movieViewed.rating}</p>
-        <p style={{color:white}}>Summary-{movieViewed.summary}</p>
+        <h1 style={{color:"white"}}>{movieViewed.name}</h1>
+        <p style={{color:"white"}}>IMDB-{movieViewed.rating}</p>
+        <p style={{color:"white"}}>Summary-{movieViewed.summary}</p>
   </div>)
 }
 
