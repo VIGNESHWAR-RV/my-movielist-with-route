@@ -260,27 +260,24 @@ function First({id,name,image,rating,summary}){
     <div style={styles} className="Movies">
       <img className="img" src={image} alt={name}/>
      <div className="nameAndRAndD">
-       <div className="nameAndR">
-     <h2>{name}</h2>
-     <p className="rating">{check1}<span style={style}>{rating}</span></p>
+     <div className="nameAndR">
+           <h2>{name}</h2>
+           <p className="rating">{check1}<span style={style}>{rating}</span></p>
      </div>
-     <IconButton aria-label="delete" size="large" color="error" onClick={()=>setRemove(!remove)}>
-     <DeleteIcon />
-</IconButton>
+     <IconButton className="delete" aria-label="delete" size="large" sx={{color:"gold"}} onClick={()=>setRemove(!remove)}>
+         <DeleteIcon />
+     </IconButton>
     </div>
-
-
-  
 
     <div className="buttons">
-    <Button color="error" onClick={()=>{showing(!show);}} variant="contained">Spoiler?👀</Button>
-    <IconButton onClick={()=>{history.push(`/movieList/${id}`)}}><InfoIcon/></IconButton>
+        <Button color="error" onClick={()=>{showing(!show);}} variant="contained">Spoiler?👀</Button>
+        <IconButton className="info" onClick={()=>{history.push(`/movieList/${id}`)}}><InfoIcon/></IconButton>
     </div>
-      {show ?<p className="summary"><b>Summary - </b>{summary}</p>: ""}
+        {show ?<p className="summary"><b>Summary - </b>{summary}</p>: ""}
     
     <div className="Likes">
-    <Button variant="contained" onClick={()=>liking(likes+1)}>👍{likes}</Button>
-    <Button variant="contained" color="error" onClick={()=>disliking(disLikes+1)}>👎{disLikes}</Button>
+       <Button variant="contained" onClick={()=>liking(likes+1)}>👍{likes}</Button>
+       <Button variant="contained" color="error" onClick={()=>disliking(disLikes+1)}>👎{disLikes}</Button>
     </div>
   </div>
          );
